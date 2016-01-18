@@ -5,10 +5,12 @@
 
 class WindSpeedSensor{
   public:
-    WindSpeedSensor();
+    WindSpeedSensor(int pin);
     ~WindSpeedSensor();
-    void setSignalPin();
-    
+    void setSignalPin(int pin);
+    float readSpeed();
+  private:
+    float calculateSpeed();
 };
 
-#ednif
+#endif
