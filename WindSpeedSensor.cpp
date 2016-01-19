@@ -27,7 +27,7 @@ float WindSpeedSensor::calculateSpeed(){
   int rawValue = analogRead(speedPin);
   float voltage = rawValue * 5.0 / 1024.0;
   float windSpeed = (voltage - threshold) * 81.0 / 4.0;
-  return voltage;
+  return windSpeed;
 }
 
 
