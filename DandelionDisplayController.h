@@ -2,14 +2,16 @@
 #define DandelionDisplayController_h
 
 #include <Arduino.h>
+#define groups 4
+#define DISPLAY_SIZE 8
 
 class DandelionDisplayController{
    public:
-    DandelionDisplayController();
+    DandelionDisplayController(int latchpins[], int datapins[], int clockpins[]);
     ~DandelionDisplayController();
+    void displayEffect(int windDirection, int brightness);
    private:
-    void westWindEffect();
-    void eastWindEffect();
+    void playScript(int groupSize, int timeSize, int script[][DISPLAY_SIZE], int offset);
 };
 
 
