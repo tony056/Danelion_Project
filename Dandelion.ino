@@ -29,6 +29,10 @@ int southWestScript[4][7] = {{2048, 16392, 8260, 34, 17, 0, 0},
                              {0, 0, 0, 17408, 8708, 4403, 0},
                              {0, 0, 0, 0, 0, 8704, 4371},
                              {0, 0, 0, 0, 0, 0, 4353}};
+int southEastScript[4][7] = {{0, 0, 0, 0, 0, 0, 4369},
+                             {0, 0, 0, 0, 64, 54, 13057},
+                             {0, 0, 64, 16420, 9234, 4865, 0},
+                             {136, 18432, 9216, 512, 0, 0, 0}};
 
 
 WindManager *windManager;
@@ -51,7 +55,7 @@ void loop() {
 //  Alarm.delay(1000);
   for(int i = 0; i < 7;i++){
     Serial.println(i);
-    leftController->ledControl(southWestScript[3][i]);
+    leftController->ledControl(southEastScript[3][i]);
 //    Haha();
     delay(3000);
   }
