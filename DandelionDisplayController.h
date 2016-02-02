@@ -10,6 +10,7 @@ class DandelionDisplayController{
     DandelionDisplayController(int latchpins[], int datapins[], int clockpins[]);
     ~DandelionDisplayController();
     void displayEffect(int windDirection, int brightness);
+    void testController(int controllerIndex, int windDirection);
    private:
     void playScript(int groupSize, int timeSize, int script[][DISPLAY_SIZE], int offset);
 };

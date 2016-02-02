@@ -13,6 +13,7 @@ LED15Controller::LED15Controller(int latchPin, int dataPin, int clockPin){
   pinMode(latch_pin, OUTPUT);
   pinMode(data_pin, OUTPUT);
   pinMode(clock_pin, OUTPUT);  
+  Serial.println("LED controller init done! LATCH: " + String(latchPin) + ", " + String(dataPin) + ", " + String(clockPin));
 }
 
 LED15Controller::~LED15Controller(){
