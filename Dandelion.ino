@@ -104,17 +104,7 @@ int index = 0;
 void setup() {
   Serial.begin(9600);
   windManager = new WindManager(win_size, A0, A1);
-//  displayController = new DandelionDisplayController(latchPins, dataPins, clockPins);
-  initLED();
-//  CheckStatus();
-//  if(!isPlaying){
-//    clearLight();
-//  }
-//  left = new LED15Controller(2, 4, 3);
-//  right = new LED15Controller(5, 7, 6);
-  setTime(8,29,0,1,1,16);
   preTime = millis();
-//  Alarm.timerRepeat(judgeTimeout, StartAnimation);
 }
 
 void loop() {
