@@ -8,7 +8,7 @@
 #include <Time.h>
 #include <TimeAlarms.h>
 
-#define judgeTimeout 5
+#define judgeTimeout 30000
 #define win_size 10
 #define timeSlides 20
 #define delayTime 1000
@@ -99,89 +99,66 @@ int northWestScript[NORTH_WEST_SIZE] = {7,
 int northWestPeriod[NORTH_WEST_PERIOD_SIZE] = {1, 2, 3, 5, 8};
 
 
-int eachDuration[7] = {13, 8, 5, 3, 2, 1, 1};
-int strength[7] = {0, 768, 1532, 2560, 3072, 3584, 3584};
+int eachDuration[7] = {13, 8, 5, 3, 2, 4, 8};
+int strength[7] = {0, 0, 0, 0, 0, 0, 0};
 
 
 WindManager *windManager;
 //DandelionDisplayController *displayController;
 boolean isPlaying = false;
+unsigned long preTime = 0;
+int index = 0;
 void setup() {
   Serial.begin(9600);
   windManager = new WindManager(win_size, A0, A1);
 //  displayController = new DandelionDisplayController(latchPins, dataPins, clockPins);
   initLED();
+//  CheckStatus();
+//  if(!isPlaying){
+//    clearLight();
+//  }
 //  left = new LED15Controller(2, 4, 3);
 //  right = new LED15Controller(5, 7, 6);
-//  setTime(8,29,0,1,1,16);
-//  Alarm.timerRepeat(judgeTimeout, CheckStatus);
+  setTime(8,29,0,1,1,16);
+  preTime = millis();
+//  Alarm.timerRepeat(judgeTimeout, StartAnimation);
 }
 
 void loop() {
 //  Serial.println("------------");
-   windManager->collectData();
-//  Alarm.delay(1000);
-//  displayController->testController(0, 0);
+//    Serial.println("" + String(windManager->getDirRawVoltage()));
+    windManager->collectData();
+    mainFunction();
+}
+
+void StartAnimation(){
+  Serial.println("start");
   CheckStatus();
   if(!isPlaying){
     // Haha();
+//    addFading(25, minVal, maxVal, millis() + 50, millis() + 1050);
     int avgDir = windManager->getDirection();
+    Serial.println("Dir: " + String(avgDir));
     setScript(avgDir);
   }
-  tlc_updateFades();
 }
 
 void CheckStatus(){
-//  Serial.println("Size: " + String(tlc_fadeBufferSize));
-  
-//  float avgSpeed = windManager->getSpeed();
   isPlaying = false;
   for(int i = 0; i < NUM_TLCS * 16; i++){
     if(tlc_isFading(i)){
       isPlaying = true;
-//      Serial.println("No. " + String(i));
+      Serial.println("No. " + String(i));
       break;
     }
   }
-}
-
-void Haha(){
-//  Serial.println("HAha");
-  uint32_t start = millis() + 50;
-  uint32_t endTime = start + 3000;
-  
-//  for(int k = 0 ; k < 2; k++){ 
-
-  int record = 0;
-  int temp = 0;
-  int count = 0;
-  for(int i = 1; i < 4; i++){
-    for(int k = 0; k < 4; k++){
-     record = temp + k * 16;
-     for(int j = record; j < record + i; j++){
-       uint32_t istart = start + 1500 * (i - 1);
-       uint32_t iend = istart + 3000;
-       if(!tlc_isFading(j) && tlc_fadeBufferSize < TLC_FADE_BUFFER_LENGTH - 2){
-         count++;
-         tlc_addFade(j, minVal, maxVal, istart, iend);
-         tlc_addFade(j, maxVal, minVal, iend, iend + 3000); 
-       }else if(tlc_isFading(j)){
-         Serial.println(String(j) + " is fading");
-       }else if(tlc_fadeBufferSize < TLC_FADE_BUFFER_LENGTH - 2){
-         Serial.println("Overload");
-       }
-      }
-    }
-    temp += i;
-  }
-  Serial.println("Count: " + String(tlc_fadeBufferSize));
 }
 
 void initLED(){
   Tlc.init();
 //  Tlc.clear();
   for(int i = 0; i < NUM_TLCS * 16; i++){
-    Serial.println(String(i));
+//    Serial.println(String(i));
     Tlc.set(i, minVal);
     tlc_removeFades(i);
   }
@@ -190,7 +167,7 @@ void initLED(){
 }
 
 void addFading(TLC_CHANNEL_TYPE channel, uint32_t maxValue, uint32_t minValue, uint32_t startTime, uint32_t endTime){
-  if(!tlc_isFading(channel) && tlc_fadeBufferSize < TLC_FADE_BUFFER_LENGTH - 2){
+  if(!tlc_isFading(channel) && tlc_fadeBufferSize < (TLC_FADE_BUFFER_LENGTH - 2)){
     tlc_addFade(channel, minValue, maxValue, startTime, endTime);
     uint32_t allEnd = endTime + (endTime - startTime);
     tlc_addFade(channel, maxValue, minValue, endTime, allEnd);
@@ -203,29 +180,29 @@ void addFading(TLC_CHANNEL_TYPE channel, uint32_t maxValue, uint32_t minValue, u
 
 void setScript(int dir){
   switch (dir) {
-      case 0:
+      case 5:
         runScript(northScript, northPeriod, NORTH_PERIOD_SIZE);
         break;
-      case 1:
+      case 6:
         runScript(northEastScript, northEastPeriod, NORTH_EAST_PERIOD_SIZE);
         break;
-      case 2: //east
+      case 7: //east
         runScript(eastScript, eastPeriod, EAST_PERIOD_SIZE);
         // runScript(westScript, westPeriod, WEST_PERIOD_SIZE);
         break;
-      case 3:
+      case 0:
         runScript(southEastScript, southEastPeriod, SOUTH_EAST_PERIOD_SIZE);
         break;
-      case 4: //south
+      case 1: //south
         runScript(southScript, southPeriod, SOUTH_PERIOD_SIZE);
         break;
-      case 5:
+      case 2:
         runScript(southWestScript, southWestPeriod, SOUTH_WEST_PERIOD_SIZE);
         break;
-      case 6: //west
+      case 3: //west
         runScript(westScript, westPeriod, WEST_PERIOD_SIZE);
         break;
-      case 7:
+      case 4:
         runScript(northWestScript, northWestPeriod, NORTH_WEST_PERIOD_SIZE);
         break;
       default:
@@ -239,7 +216,7 @@ void runScript(int* script, int* period, int period_size){
   int startIndex = WHOLE_SIZE - period_size;
   int temp = 0;
   uint32_t prevStart = 0;
-
+  unsigned long lastMillis = millis();
   for(int i = 0; i < period_size; i++){
     int durationIndex = startIndex + i;
     uint32_t startTime = 0;
@@ -254,6 +231,34 @@ void runScript(int* script, int* period, int period_size){
     prevStart = startTime;
     temp += period[i];
   }
+  unsigned long currentMillis = 0;
+  do {
+    currentMillis = millis();
+    tlc_updateFades(currentMillis);
+  } while (currentMillis - lastMillis <= judgeTimeout);
+  clearLight();
 }
+
+void clearLight(){
+  for(int i = 0; i < NUM_TLCS * 16; i++){
+    Tlc.set(i, minVal); 
+    tlc_removeFades(i);
+  }
+  Tlc.update();
+}
+
+void allUp(int ch){
+  for(int i = 0; i < NUM_TLCS * 16; i++){
+    Tlc.set(i, maxVal); 
+    
+  }
+  Tlc.update();
+}
+
+void mainFunction(){
+    StartAnimation();
+    preTime = millis();
+}
+
 
 

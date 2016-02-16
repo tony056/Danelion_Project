@@ -13,6 +13,7 @@ class WindManager{
     void collectData();
     int getDirection();
     float getSpeed();
+    float getDirRawVoltage();
 };
 
 #endif

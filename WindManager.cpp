@@ -1,7 +1,7 @@
 #include "WindManager.h"
 #define dir_num 8
 
-int window_size = 10;
+int window_size = 100;
 int pos = 0;
 WindDirectionSensor *wdSensor;
 WindSpeedSensor *wspdSensor;
@@ -49,6 +49,10 @@ float WindManager::getSpeed(){
   }
   avg = avg / window_size;
   return avg;
+}
+
+float WindManager::getDirRawVoltage(){
+  return wdSensor->readRawVoltage();
 }
 
 
