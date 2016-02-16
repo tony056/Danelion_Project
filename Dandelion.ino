@@ -1,12 +1,6 @@
 #include "WindManager.h"
-//#include "DandelionDisplayController.h"
-//#include "LED15Controller.h"
 #include "Sparkfun_Tlc5940.h"
 #include "tlc_fades.h"
-
-
-#include <Time.h>
-#include <TimeAlarms.h>
 
 #define judgeTimeout 30000
 #define win_size 10
@@ -14,7 +8,6 @@
 #define delayTime 1000
 #define maxVal 0
 #define minVal 4095
-// #define duration 3000
 #define SCRIPT_SIZE 20
 
 #define NORTH_SIZE 17 
